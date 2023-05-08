@@ -57,6 +57,11 @@
   margin-bottom: 50px;
 }
 
+.undone .checkedIcon,
+.inProgress .checkedIcon {
+  display: none;
+}
+
 .name {
   font-weight: 500;
   color: #d1411e;

@@ -41,28 +41,52 @@ const Order = () => {
             <Image src={"/img/paid.png"} alt="" width={30} height={30} />
             <span>Payment</span>
             <div className={styles.checkedIcon}>
-              <Image src={"/img/checked.png"} width={20} height={20} alt="" />
+              <Image
+                src={"/img/checked.png"}
+                className={styles.checkedIcon}
+                width={20}
+                height={20}
+                alt=""
+              />
             </div>
           </div>
           <div className={statusClass(1)}>
             <Image src={"/img/bake.png"} alt="" width={30} height={30} />
             <span>Preparing</span>
             <div className={styles.checkedIcon}>
-              <Image src={"/img/checked.png"} width={20} height={20} alt="" />
+              <Image
+                src={"/img/checked.png"}
+                className={styles.checkedIcon}
+                width={20}
+                height={20}
+                alt=""
+              />
             </div>
           </div>
           <div className={statusClass(2)}>
             <Image src={"/img/bike.png"} alt="" width={30} height={30} />
             <span>On the Way</span>
             <div className={styles.checkedIcon}>
-              <Image src={"/img/checked.png"} width={20} height={20} alt="" />
+              <Image
+                src={"/img/checked.png"}
+                className={styles.checkedIcon}
+                width={20}
+                height={20}
+                alt=""
+              />
             </div>
           </div>
           <div className={statusClass(3)}>
             <Image src={"/img/delivered.png"} alt="" width={30} height={30} />
             <span>Delivered</span>
             <div className={styles.checkedIcon}>
-              <Image src={"/img/checked.png"} width={20} height={20} alt="" />
+              <Image
+                src={"/img/checked.png"}
+                className={styles.checkedIcon}
+                width={20}
+                height={20}
+                alt=""
+              />
             </div>
           </div>
         </div>

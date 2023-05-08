@@ -33,3 +33,15 @@
 .motto {
   color: #d8d8d8;
 }
+
+@media screen and (max-width: 480px) {
+  .container {
+    height: auto;
+  }
+  .item:first-child {
+    display: none;
+  }
+  .item {
+    flex-direction: column;
+  }
+}
