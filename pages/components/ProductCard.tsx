@@ -1,30 +1,13 @@
 import styles from "@/styles/ProductCard.module.css";
-import { ProductModel } from "@/utils/ProductModel";
+import { ProductModel } from "@/models/ProductModel";
 import Image from "next/image";
 import Link from "next/link";
+import { convertToK } from "@/utils/global_methods";
 
 type Data = {
   product: ProductModel;
 };
 const ProductCard = ({ product }: Data) => {
-  const convertToK = (angka: number) => {
-    if (angka >= 1000) {
-      const suffixes = ["", "k", "M", "B", "T"];
-      const suffixNum = Math.floor(("" + angka).length / 3);
-      let shortValue = parseFloat(
-        (suffixNum != 0
-          ? angka / Math.pow(1000, suffixNum)
-          : angka
-        ).toPrecision(2)
-      );
-      if (shortValue % 1 != 0) {
-        shortValue = parseInt(shortValue.toFixed(1));
-      }
-      return shortValue + suffixes[suffixNum];
-    }
-    return angka;
-  };
-
   return (
     <div className={styles.container}>
       <Link href={`/product/${product._id}`} passHref>

@@ -1,17 +1,15 @@
+import { ProductModel } from "@/models/ProductModel";
 import styles from "@/styles/Product.module.css";
+import { axiosPublic } from "@/utils/api_config";
+import { convertToK } from "@/utils/global_methods";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { useState } from "react";
-
-const Product = () => {
+type Data = {
+  product: ProductModel;
+};
+const Product = ({ product }: Data) => {
   const [size, setSize] = useState(0);
-  const pizza = {
-    id: 1,
-    img: "/img/pizza.png",
-    name: "PIZZA NATABONA",
-    price: [19.9, 23.9, 39.9],
-    desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure dolores odio, quam amet sequi vel velit quo vero iste! Alias quod iure nulla animi veritatis veniam molestiae maxime, cupiditate vitae!",
-  };
-
   const additionals = [
     {
       id: "double",
@@ -38,13 +36,20 @@ const Product = () => {
     <div className={styles.container}>
       <div className={styles.left}>
         <div className={styles.imgContainer}>
-          <Image src={pizza.img} alt="" style={{ objectFit: "contain" }} fill />
+          <Image
+            src={product.img}
+            alt=""
+            style={{ objectFit: "contain" }}
+            fill
+          />
         </div>
       </div>
       <div className={styles.right}>
-        <h1 className={styles.title}>{pizza.name}</h1>
-        <span className={styles.price}>${pizza.price[size]}</span>
-        <p className={styles.desc}>{pizza.desc}</p>
+        <h1 className={styles.title}>{product.title}</h1>
+        <span className={styles.price}>
+          IDR {convertToK(product.prices[size])}
+        </span>
+        <p className={styles.desc}>{product.desc}</p>
         <h3 className={styles.choose}>Choose the size</h3>
         <div className={styles.sizes}>
           <div className={styles.size} onClick={() => setSize(0)}>
@@ -63,15 +68,15 @@ const Product = () => {
         <h3 className={styles.choose}>Choose additional ingredients</h3>
 
         <div className={styles.ingredients}>
-          {additionals.map((additional, i) => (
+          {product.extraOptions.map((additional, i) => (
             <div className={styles.option} key={i}>
               <input
                 type="checkbox"
-                id={additional.id}
-                name={additional.name}
+                id={additional._id}
+                name={additional._id}
                 className={styles.checkbox}
               />
-              <label htmlFor={additional.id}>{additional.text}</label>
+              <label htmlFor={additional._id}>{additional.text}</label>
             </div>
           ))}
         </div>
@@ -85,3 +90,15 @@ const Product = () => {
 };
 
 export default Product;
+
+export const getServerSideProps: GetServerSideProps<Data> = async ({
+  params,
+}) => {
+  const response = await axiosPublic.get(`/api/products/${params?.id}`);
+
+  return {
+    props: {
+      product: response.data.data,
+    },
+  };
+};

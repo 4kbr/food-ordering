@@ -6,6 +6,7 @@ export type ProductModel = {
   prices: [number];
   extraOptions: [
     {
+      _id: string;
       text: string;
       price: number;
     }

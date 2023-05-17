@@ -1,10 +1,9 @@
 import styles from "@/styles/Home.module.css";
-import axios from "axios";
+import { axiosPublic } from "@/utils/api_config";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Featured from "./components/Featured";
 import ProductList from "./components/ProductList";
-import { GetServerSideProps } from "next";
-import Product from "@/models/Product";
 
 type Data = {
   productList: [];
@@ -25,7 +24,7 @@ export default function Home({ productList }: Data) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await axios.get("http://localhost:3000/api/products");
+  const res = await axiosPublic.get("/api/products");
   return {
     props: {
       productList: res.data.data,

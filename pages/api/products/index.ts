@@ -14,9 +14,11 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  dbConnect();
+  await dbConnect();
 
   if (method === "GET") {
+    console.log("ini tanpa /id");
+
     try {
       const product = await Product.find();
       res.status(200).json({
