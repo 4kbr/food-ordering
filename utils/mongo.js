@@ -40,6 +40,7 @@ async function dbConnect() {
     cached.promise = null;
     throw e;
   }
+  console.log("on connect db");
 
   return cached.conn;
 }
