@@ -1,9 +1,15 @@
+import styles from "@/styles/Home.module.css";
+import axios from "axios";
 import Head from "next/head";
 import Featured from "./components/Featured";
 import ProductList from "./components/ProductList";
-import styles from "@/styles/Home.module.css";
+import { GetServerSideProps } from "next";
+import Product from "@/models/Product";
 
-export default function Home() {
+type Data = {
+  productList: [];
+};
+export default function Home({ productList }: Data) {
   return (
     <div className={styles.container}>
       <Head>
@@ -13,7 +19,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Featured />
-      <ProductList />
+      <ProductList productList={productList} />
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res = await axios.get("http://localhost:3000/api/products");
+  return {
+    props: {
+      productList: res.data.data,
+    },
+  };
+};
