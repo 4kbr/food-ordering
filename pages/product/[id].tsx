@@ -88,6 +88,7 @@ const Product = ({ product }: Data) => {
         <div className={styles.add}>
           <input
             type="number"
+            min={1}
             className={styles.quantity}
             defaultValue={1}
             onChange={(e) => setQuantity(parseInt(e.target.value))}
