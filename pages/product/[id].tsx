@@ -1,6 +1,6 @@
 import { ProductModel } from "@/models/ProductModel";
 import styles from "@/styles/Product.module.css";
-import { axiosPublic } from "@/utils/api_config";
+import { axiosPublic } from "@/configs/api_config";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";

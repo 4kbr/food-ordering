@@ -2,7 +2,7 @@ import styles from "@/styles/ProductCard.module.css";
 import { ProductModel } from "@/models/ProductModel";
 import Image from "next/image";
 import Link from "next/link";
-import { convertToK } from "@/utils/global_methods";
+import { convertToK } from "@/configs/global_methods";
 
 type Data = {
   product: ProductModel;

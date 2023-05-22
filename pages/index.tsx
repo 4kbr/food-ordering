@@ -1,5 +1,5 @@
 import styles from "@/styles/Home.module.css";
-import { axiosPublic } from "@/utils/api_config";
+import { axiosPublic } from "@/configs/api_config";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Featured from "./components/Featured";
