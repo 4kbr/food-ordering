@@ -1,11 +1,11 @@
 import styles from "@/styles/ProductCard.module.css";
-import { ProductModel } from "@/models/ProductModel";
+import { ProductApi } from "@/models/ProductModel";
 import Image from "next/image";
 import Link from "next/link";
 import { convertToK } from "@/configs/global_methods";
 
 type Data = {
-  product: ProductModel;
+  product: ProductApi;
 };
 const ProductCard = ({ product }: Data) => {
   return (

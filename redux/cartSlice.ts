@@ -1,8 +1,8 @@
-import { ProductModel } from "@/models/ProductModel";
+import { ProductChild } from "@/models/ProductModel";
 import { createSlice } from "@reduxjs/toolkit";
 
 export type Cart = {
-  products: ProductModel[];
+  products: ProductChild[];
   total: number;
   quantity: number;
 };

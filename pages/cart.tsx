@@ -1,7 +1,13 @@
+import { ProductApi } from "@/models/ProductModel";
+import { Cart } from "@/redux/cartSlice";
+import { IRootState } from "@/redux/store";
 import styles from "@/styles/Cart.module.css";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  const cart = useSelector<IRootState, Cart>((state) => state.cart);
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -17,64 +23,46 @@ const Cart = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className={styles.tr}>
-              <td>
-                <div className={styles.imgContainer}>
-                  <Image
-                    fill
-                    alt=""
-                    src={"/img/pizza.png"}
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-              </td>
-              <td>
-                <span className={styles.name}>CORAL29</span>
-              </td>
-              <td>
-                <span className={styles.extras}>
-                  Double ingredients, with sambal
-                </span>
-              </td>
-              <td>
-                <span className={styles.price}>$19.90</span>
-              </td>
-              <td>
-                <span className={styles.quantity}>2</span>
-              </td>
-              <td>
-                <span className={styles.total}>$39.90</span>
-              </td>
-            </tr>
-            <tr className={styles.tr}>
-              <td>
-                <div className={styles.imgContainer}>
-                  <Image
-                    fill
-                    alt=""
-                    src={"/img/pizza.png"}
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-              </td>
-              <td>
-                <span className={styles.name}>CORAL29</span>
-              </td>
-              <td>
-                <span className={styles.extras}>
-                  Double ingredients, with sambal
-                </span>
-              </td>
-              <td>
-                <span className={styles.price}>$19.90</span>
-              </td>
-              <td>
-                <span className={styles.quantity}>2</span>
-              </td>
-              <td>
-                <span className={styles.total}>$39.90</span>
-              </td>
-            </tr>
+            {cart.products.map((product, i) => (
+              <tr className={styles.tr} key={i}>
+                <td>
+                  <div className={styles.imgContainer}>
+                    <Image
+                      fill
+                      alt=""
+                      src={`${product.img}`}
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <span className={styles.name}>{product.title}</span>
+                </td>
+                <td>
+                  <span className={styles.extras}>
+                    {product.extras.map((extra, j) => (
+                      <span key={j}>
+                        {extra.text +
+                          (j < product.extras.length - 1 ? ", " : "")}
+                      </span>
+                    ))}
+                  </span>
+                </td>
+                <td>
+                  <span className={styles.price}>
+                    IDR {product.price.toLocaleString()}
+                  </span>
+                </td>
+                <td>
+                  <span className={styles.quantity}>{product.quantity}</span>
+                </td>
+                <td>
+                  <span className={styles.total}>
+                    IDR {(product.quantity * product.price).toLocaleString()}
+                  </span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -82,13 +70,15 @@ const Cart = () => {
         <div className={styles.wrapper}>
           <h2 className={styles.title}>CART TOTAL</h2>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Subtotal:</b>$79.80
+            <b className={styles.totalTextTitle}>Subtotal:</b>IDR{" "}
+            {cart.total.toLocaleString()}
           </div>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Discount:</b>$9.80
+            <b className={styles.totalTextTitle}>Discount:</b>IDR{" 0"}
           </div>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Total:</b>$70.00
+            <b className={styles.totalTextTitle}>Total:</b>IDR
+            {" " + cart.total.toLocaleString()}
           </div>
           <button className={styles.button}>CHECKOUT NOW!</button>
         </div>

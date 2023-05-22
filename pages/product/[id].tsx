@@ -1,19 +1,21 @@
-import { ProductModel } from "@/models/ProductModel";
-import styles from "@/styles/Product.module.css";
 import { axiosPublic } from "@/configs/api_config";
+import { ExtraOption, ProductApi } from "@/models/ProductModel";
+import { addProduct } from "@/redux/cartSlice";
+import styles from "@/styles/Product.module.css";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
+import { MouseEvent } from "react";
 import { ChangeEvent, useState } from "react";
+import { useDispatch } from "react-redux";
 type Data = {
-  product: ProductModel;
+  product: ProductApi;
 };
 const Product = ({ product }: Data) => {
   const [price, setPrice] = useState(product.prices[0]);
   const [size, setSize] = useState(0);
-  const [extras, setExtras] = useState<
-    { _id: string; text: string; price: number }[]
-  >([]);
+  const [extras, setExtras] = useState<ExtraOption[]>([]);
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
 
   const changePrize = (number: number) => setPrice(price + number);
 
@@ -24,7 +26,7 @@ const Product = ({ product }: Data) => {
   };
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>,
-    additional: { _id: string; text: string; price: number }
+    additional: ExtraOption
   ) => {
     const checked = e.target.checked;
     if (checked) {
@@ -34,6 +36,15 @@ const Product = ({ product }: Data) => {
       changePrize(-additional.price);
       setExtras(extras?.filter((extra) => extra._id !== additional._id));
     }
+  };
+
+  /**
+   * function yang dipanggil saat menambah barang
+   */
+  const handleAddCart = (
+    event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    dispatch(addProduct({ ...product, extras, price, quantity }));
   };
 
   return (
@@ -50,9 +61,7 @@ const Product = ({ product }: Data) => {
       </div>
       <div className={styles.right}>
         <h1 className={styles.title}>{product.title}</h1>
-        <span className={styles.price}>
-          IDR {price.toLocaleString("en-US")}
-        </span>
+        <span className={styles.price}>IDR {price.toLocaleString()}</span>
         <p className={styles.desc}>{product.desc}</p>
         <h3 className={styles.choose}>Choose the size</h3>
         <div className={styles.sizes}>
@@ -93,7 +102,9 @@ const Product = ({ product }: Data) => {
             defaultValue={1}
             onChange={(e) => setQuantity(parseInt(e.target.value))}
           />
-          <button className={styles.button}>Add to Cart</button>
+          <button className={styles.button} onClick={handleAddCart}>
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>

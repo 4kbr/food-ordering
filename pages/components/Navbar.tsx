@@ -1,8 +1,9 @@
-import { ProductModel } from "@/models/ProductModel";
+import { ProductApi } from "@/models/ProductModel";
 import { Cart } from "@/redux/cartSlice";
 import { IRootState } from "@/redux/store";
 import styles from "@/styles/Navbar.module.css";
 import Image from "next/image";
+import Link from "next/link";
 import { useSelector } from "react-redux";
 
 const Navbar = () => {
@@ -36,12 +37,14 @@ const Navbar = () => {
           <li className={styles.listItem}>Contact</li>
         </ul>
       </div>
-      <div className={styles.item}>
-        <div className={styles.cart}>
-          <Image src="/img/cart.png" alt="keranjang" width={30} height={30} />
-          <div className={styles.counter}>{quantity}</div>
+      <Link href={"/cart"} passHref>
+        <div className={styles.item}>
+          <div className={styles.cart}>
+            <Image src="/img/cart.png" alt="keranjang" width={30} height={30} />
+            <div className={styles.counter}>{quantity}</div>
+          </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 };
