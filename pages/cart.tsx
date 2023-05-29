@@ -28,7 +28,9 @@ const Cart = () => {
   const createOrder = async (data: any) => {
     try {
       const res = await axiosPublic.post("/api/orders", data);
-      res.status === 201 && router.push("/orders/" + res.data._id);
+      console.log("createOrder");
+      console.log(res.data.data);
+      res.status === 201 && router.push("/orders/" + res.data.data._id);
       dispatch(reset());
     } catch (error) {
       console.log(error);

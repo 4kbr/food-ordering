@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import Order from "@/models/Order";
 import dbConnect from "@/utils/mongo";
-import Product from "@/models/Product";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
   status: number;
@@ -19,12 +19,14 @@ export default async function handler(
   switch (method) {
     case "GET":
       try {
-        const product = await Product.find();
-        res.status(200).json({
-          status: 200,
-          message: "successfully get products",
-          data: product,
-        });
+        const order = await Order.findById(query.id);
+        res
+          .status(200)
+          .json({
+            status: 200,
+            message: "successfully get order by id",
+            data: order,
+          });
       } catch (error) {
         const e: Error = error as Error;
         console.log(e);

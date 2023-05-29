@@ -1,7 +1,14 @@
+import { axiosPublic } from "@/configs/api_config";
+import { OrderType } from "@/models/OrderModel";
 import styles from "@/styles/Order.module.css";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 
-const Order = () => {
+type Data = {
+  order: OrderType;
+};
+
+const Order = ({ order }: Data) => {
   const status = 0;
   const statusClass = (index: number): string => {
     if (index - status < 1) return styles.done;
@@ -22,16 +29,16 @@ const Order = () => {
             </tr>
             <tr className={styles.tr}>
               <td>
-                <span className={styles.id}>123921388123</span>
+                <span className={styles.id}>{order._id}</span>
               </td>
               <td>
-                <span className={styles.name}>John Doeo</span>
+                <span className={styles.name}>{order.customer}</span>
               </td>
               <td>
-                <span className={styles.address}>Elston St.Wr 290</span>
+                <span className={styles.address}>{order.address}</span>
               </td>
               <td>
-                <span className={styles.total}>$39.90</span>
+                <span className={styles.total}>${order.total}</span>
               </td>
             </tr>
           </table>
@@ -95,19 +102,29 @@ const Order = () => {
         <div className={styles.wrapper}>
           <h2 className={styles.title}>CART TOTAL</h2>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Subtotal:</b>$79.80
+            <b className={styles.totalTextTitle}>Subtotal:</b>${order.total}
           </div>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Discount:</b>$9.80
+            <b className={styles.totalTextTitle}>Discount:</b>$0.00
           </div>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Total:</b>$70.00
+            <b className={styles.totalTextTitle}>Total:</b>${order.total}
           </div>
           <button className={styles.button}>CHECKOUT NOW!</button>
         </div>
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<Data> = async (context) => {
+  const res = await axiosPublic.get(`/api/orders/${context?.params?.id}`);
+
+  return {
+    props: {
+      order: res.data.data,
+    },
+  };
 };
 
 export default Order;
