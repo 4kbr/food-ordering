@@ -1,26 +1,39 @@
-import { ProductApi } from "@/models/ProductModel";
-import { Cart } from "@/redux/cartSlice";
+import { axiosPublic } from "@/configs/api_config";
+import { Cart, reset } from "@/redux/cartSlice";
 import { IRootState } from "@/redux/store";
 import styles from "@/styles/Cart.module.css";
-import Image from "next/image";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import {
-  PayPalScriptProvider,
   PayPalButtons,
+  PayPalScriptProvider,
   usePayPalScriptReducer,
 } from "@paypal/react-paypal-js";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cart = () => {
   const [open, setOpen] = useState(false);
 
   // This values are the props in the UI
-  const amount = "2";
   const currency = "USD";
   const style = { layout: "vertical" };
+  const cart = useSelector<IRootState, Cart>((state) => state.cart);
+  const amount = cart.total;
 
   const dispatch = useDispatch();
-  const cart = useSelector<IRootState, Cart>((state) => state.cart);
+  const router = useRouter();
+
+  const createOrder = async (data: any) => {
+    try {
+      const res = await axiosPublic.post("/api/orders", data);
+      res.status === 201 && router.push("/orders/" + res.data._id);
+      dispatch(reset());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // Custom component to wrap the PayPalButtons and handle currency changes
   const ButtonWrapper = ({ currency, showSpinner }: any) => {
@@ -54,7 +67,7 @@ const Cart = () => {
                   {
                     amount: {
                       currency_code: currency,
-                      value: amount,
+                      value: amount.toString(),
                     },
                   },
                 ],
@@ -65,8 +78,16 @@ const Cart = () => {
               });
           }}
           onApprove={async (data, actions) => {
-            return actions.order?.capture().then(function () {
-              // Your code here after capture the order
+            return actions.order?.capture().then(function (details) {
+              console.log("onapprove");
+              console.log(details);
+              const shipping = details.purchase_units[0].shipping;
+              createOrder({
+                customer: shipping?.name?.full_name,
+                address: shipping?.address?.address_line_1,
+                total: cart.total,
+                method: 1,
+              });
             });
           }}
         />
@@ -75,6 +96,12 @@ const Cart = () => {
   };
   return (
     <div className={styles.container}>
+      <Head>
+        <title>Pizza bung - Cart</title>
+        <meta name="description" content="Pizza terenak rasa bung enak" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className={styles.left}>
         <table className={styles.table}>
           <thead>
@@ -115,7 +142,7 @@ const Cart = () => {
                 </td>
                 <td>
                   <span className={styles.price}>
-                    IDR {product.price.toLocaleString()}
+                    ${product.price.toLocaleString()}
                   </span>
                 </td>
                 <td>
@@ -123,7 +150,7 @@ const Cart = () => {
                 </td>
                 <td>
                   <span className={styles.total}>
-                    IDR {(product.quantity * product.price).toLocaleString()}
+                    ${(product.quantity * product.price).toLocaleString()}
                   </span>
                 </td>
               </tr>
@@ -135,14 +162,14 @@ const Cart = () => {
         <div className={styles.wrapper}>
           <h2 className={styles.title}>CART TOTAL</h2>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Subtotal:</b>IDR{" "}
+            <b className={styles.totalTextTitle}>Subtotal:</b>${" "}
             {cart.total.toLocaleString()}
           </div>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Discount:</b>IDR{" 0"}
+            <b className={styles.totalTextTitle}>Discount:</b>${" 0"}
           </div>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Total:</b>IDR
+            <b className={styles.totalTextTitle}>Total:</b>$
             {" " + cart.total.toLocaleString()}
           </div>
           {open ? (
@@ -150,7 +177,8 @@ const Cart = () => {
               <button className={styles.payButton}>CASH ONDELIVERY</button>
               <PayPalScriptProvider
                 options={{
-                  "client-id": "test",
+                  "client-id":
+                    "AQvpZIz_A1mJhCbc_3OW8MM9uqCgK5DGXaHP7RwbhI83J-sJl83pVi7zIYGcAJSxlQqBw_q4XlXolP0t",
                   components: "buttons",
                   currency: "USD",
                   "disable-funding": "credit,card,p24",

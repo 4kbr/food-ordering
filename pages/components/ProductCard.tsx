@@ -14,7 +14,7 @@ const ProductCard = ({ product }: Data) => {
         <Image src={product.img} alt="foto pizza" width="200" height="200" />
       </Link>
       <h1 className={styles.title}>{product.title}</h1>
-      <span className={styles.price}>IDR {convertToK(product.prices[0])}</span>
+      <span className={styles.price}>${convertToK(product.prices[0])}</span>
       <p className={styles.desc}>{product.desc}</p>
     </div>
   );
