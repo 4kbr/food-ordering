@@ -110,7 +110,9 @@ const Order = ({ order }: Data) => {
           <div className={styles.totalText}>
             <b className={styles.totalTextTitle}>Total:</b>${order.total}
           </div>
-          <button className={styles.button}>CHECKOUT NOW!</button>
+          <button disabled className={styles.button}>
+            PAID
+          </button>
         </div>
       </div>
     </div>

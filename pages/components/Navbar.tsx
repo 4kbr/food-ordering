@@ -1,5 +1,3 @@
-import { ProductApi } from "@/models/ProductModel";
-import { Cart } from "@/redux/cartSlice";
 import { IRootState } from "@/redux/store";
 import styles from "@/styles/Navbar.module.css";
 import Image from "next/image";
@@ -28,7 +26,9 @@ const Navbar = () => {
       </div>
       <div className={styles.item}>
         <ul className={styles.list}>
-          <li className={styles.listItem}>Homepage</li>
+          <Link href={"/"} passHref>
+            <li className={styles.listItem}>Homepage</li>
+          </Link>
           <li className={styles.listItem}>Products</li>
           <li className={styles.listItem}>Menu</li>
           <Image src="/img/logo.png" alt="logo" width={160} height={69} />
