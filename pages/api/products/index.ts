@@ -12,7 +12,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { method } = req;
+  const { method, cookies } = req;
+
+  const token = cookies.token;
 
   await dbConnect();
 
@@ -33,6 +35,12 @@ export default async function handler(
     }
   }
   if (method === "POST") {
+    if (!token || token !== process.env.TOKEN) {
+      return res
+        .status(401)
+        .json({ status: 401, message: "Not Authentication" });
+    }
+
     try {
       const product = await Product.create(req.body);
       res.status(201).json({
@@ -45,10 +53,4 @@ export default async function handler(
       return res.status(500).json({ status: 500, message: e.message });
     }
   }
-
-  // res.status(200).json({
-  //   status: 200,
-  //   message: "Successfully rest api",
-  //   data: { name: "john Doe" },
-  // });
 }

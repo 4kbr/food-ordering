@@ -5,13 +5,28 @@ import styles from "@/styles/AdminPage.module.css";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { useState } from "react";
 
 type Data = {
-  products: [ProductApi];
-  orders: [OrderType];
+  products: ProductApi[];
+  orders: OrderType[];
 };
 
 const AdminPage = ({ products, orders }: Data) => {
+  const [productList, setProductList] = useState(products);
+  const [orderList, setOrderList] = useState(orders);
+  const status = ["preparing", "on the way", "delivered"];
+
+  const handleDelete = async (id: string) => {
+    console.log(`id is : ${id}`);
+    try {
+      const res = await axiosPublic.delete(`/api/products/${id}`);
+      setProductList((prev) => prev.filter((product) => product._id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -46,7 +61,12 @@ const AdminPage = ({ products, orders }: Data) => {
                 <td>${product.prices[0]}</td>
                 <td>
                   <button className={styles.button}>Edit</button>
-                  <button className={styles.button}>Delete</button>
+                  <button
+                    className={styles.button}
+                    onClick={() => handleDelete(product._id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -66,18 +86,22 @@ const AdminPage = ({ products, orders }: Data) => {
               <th>Action</th>
             </tr>
           </tbody>
-          <tbody>
-            <tr className={styles.trTitle}>
-              <td>{"1230812938129083018".slice(0, 5) + "..."}</td>
-              <td>Just jonh</td>
-              <td>$1.231,00</td>
-              <td>Paid</td>
-              <td>preparing</td>
-              <td>
-                <button>Next Stage</button>
-              </td>
-            </tr>
-          </tbody>
+          {orderList.map((order) => (
+            <tbody key={order._id}>
+              <tr className={styles.trTitle}>
+                <td>{order?._id?.slice(0, 5) + "..."}</td>
+                <td>{order.customer}</td>
+                <td>${order.total}</td>
+                <td>
+                  {order.method === 0 ? <span>cash</span> : <span>paid</span>}
+                </td>
+                <td>preparing</td>
+                <td>
+                  <button>Next Stage</button>
+                </td>
+              </tr>
+            </tbody>
+          ))}
         </table>
       </div>
     </div>
