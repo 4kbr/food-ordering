@@ -27,6 +27,23 @@ const AdminPage = ({ products, orders }: Data) => {
     }
   };
 
+  const handleStatus = async (id: string) => {
+    const item = orderList.filter((order) => order._id === id)[0];
+    const currentStatus = item.status;
+
+    try {
+      const res = await axiosPublic.put("/api/orders" + id, {
+        status: currentStatus! + 1,
+      });
+      setOrderList([
+        res.data,
+        ...orderList.filter((order) => order._id !== id),
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -97,7 +114,9 @@ const AdminPage = ({ products, orders }: Data) => {
                 </td>
                 <td>preparing</td>
                 <td>
-                  <button>Next Stage</button>
+                  <button onClick={() => handleStatus(order._id!)}>
+                    Next Stage
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -108,7 +127,18 @@ const AdminPage = ({ products, orders }: Data) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const myCookie = context.req?.cookies || "";
+
+  if (myCookie.token !== process.env.TOKEN) {
+    return {
+      redirect: {
+        destination: "/admin/login",
+        permanent: false,
+      },
+    };
+  }
+
   const productRes = await axiosPublic.get("/api/products");
   const orderRes = await axiosPublic.get("/api/orders");
   console.log("orders and product success");

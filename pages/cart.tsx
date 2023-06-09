@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import OrderDetail from "./components/OrderDetail";
+import OrderDetail from "../components/OrderDetail";
 
 const Cart = () => {
   const [open, setOpen] = useState(false);
